@@ -1,0 +1,12 @@
+# Python virtual environment
+/.ece-4-tut./
+/.activate
+
+# Vim files
+.*.swp
+
+# Visual Studio code
+/.vscode
+
+# Sphinx build directory
+/build/
