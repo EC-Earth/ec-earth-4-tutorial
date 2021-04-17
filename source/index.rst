@@ -5,6 +5,10 @@ EC-Earth 4 Getting Started Tutorial
    :maxdepth: 2
    :caption: Contents:
 
+   introduction
+   preparations
+   building
+   simple-experiments
 
 
 Indices and tables
