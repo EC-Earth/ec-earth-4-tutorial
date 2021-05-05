@@ -14,7 +14,7 @@ may not yet be supported. An attempt is made to keep this tutorial
 up-to-date, which means that details will change often and without prior
 notice. This includes in particular URLs to repositories and references to
 branches, steps to build or run the model, and supported features. It is
-therefore adviced to double check the latest online version of the tutorial
+therefore advised to double check the latest on-line version of the tutorial
 in case of problems.
 
 - currently some steps are more complicated than they should be
