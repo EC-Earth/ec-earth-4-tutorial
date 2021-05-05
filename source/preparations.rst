@@ -53,21 +53,21 @@ As a first step, check the Python version available by default::
     Python 3.8.3
 
 Make sure that the version reported is between 3.6 and 3.8 (inclusive), where
-the patch level (the last of the dot-separated numbers) does not matter. On
-some systems, the default ``python`` executable may still point to Python2.
-In this case, try ``python3 --version`` and use ``python3`` also in the next
-step.
+the patch level (the last part of the dot-separated version number) does not
+matter.  On some systems, the default ``python`` executable may still point to
+some Python2 version.  In this case, try ``python3 --version`` and use
+``python3`` also in the next step.
 
 Now, create a new virtual environment in the |ece4| directory with::
 
-    ece-4> python -m venv .ece-4
+    ece-4> python -m venv .ECE4
 
-which will create a :file:`.ece-4` subdirectory for the environment.
+which will create a :file:`.ECE4` directory for the environment.
 
 .. note::
 
     Again, the name of the directory for the virtual environment
-    (:file:`.ece-4`) is an example and any other name may be chosen.
+    (:file:`.ECE4`) is an example and any other name may be chosen.
     In the example above, a hidded directory (the name starting with a dot)
     is used in order to keep the |ece4| source and runtime directory clean.
 
@@ -76,11 +76,11 @@ The virtual Python environment is only *created* once, but it has to be
 used in. Activating the virtual environment is done by sourcing the
 :file:`activate` script in the environment directory::
 
-    ece-4> source .ece-4/bin/activate
+    ece-4> source .ECE4/bin/activate
 
 after which, the prompt should change to show the activation status::
 
-    (.ece-4) ece-4>
+    (.ECE4) ece-4>
 
 This prompt will be used in the examples of this tutorial, to keep reminding
 that the environment must be activated.
@@ -88,13 +88,13 @@ that the environment must be activated.
 .. hint::
 
     It may be convenient to create a symbolic link with ``ln -s
-    .ece-4/bin/activate``, after which the environment can be activated by
-    ``. activate`` in the :file:`ece-4` directory.
+    .ECE4/bin/activate``, after which the environment can be activated by
+    typing ``. activate`` in the :file:`ece-4` directory.
 
-It is always a good ide to upgrade the Python package manager, :file:`pip`,
-in a new virtual environment::
+It is always a good idea to upgrade the Python package manager, :file:`pip`, in
+a new virtual environment::
 
-    (.ece-4) ece-4> pip install -U pip
+    (.ECE4) ece-4> pip install -U pip
 
 after which the environment is ready for the installation of ScriptEngine.
 
@@ -105,19 +105,19 @@ Installing ScriptEngine
 Since ScriptEngine is provided as a package at `PyPi <https://pypi.org>`_, it
 can easily be installed with :file:`pip`::
 
-    (.ece-4) ece-4> pip install scriptengine
+    (.ECE4) ece-4> pip install scriptengine
 
 Some of the runtime scripts use a particular ScriptEngine task package, so it
 is best installed right away::
 
-    (.ece-4) ece-4> pip install scriptengine-tasks-hpc
+    (.ECE4) ece-4> pip install scriptengine-tasks-hpc
 
 This completes the ScriptEngine installation. It can be tested with::
 
-    (.ece-4) ece-4> se --version
-    0.8.2
+    (.ECE4) ece-4> se --version
+    0.8.5
 
-(Note that the version can differ, but it should not be lower than 0.8.2)
+(Note that the version can differ, but it should not be lower than 0.8.5)
 
 
 Installing the OCP-Tool
@@ -125,6 +125,23 @@ Installing the OCP-Tool
 
 Download and install the OCP-Tool in the EC-Earth 4 virtual environment::
 
-    (.ece-4) > git clone htpps://github.com/uwefladrich/ocp-tool
-    (.ece-4) > cd ocp-tool
-    (.ece-4) ocp-tool> pip install -e .
+    (.ECE4) ece-4> cd ..
+    (.ECE4) > git clone https://github.com/uwefladrich/ocp-tool
+    (.ECE4) > cd ocp-tool
+
+The code that adapts the OCP-Tool to |ece4| is currently developed in a
+branch, which is checked out with::
+
+    (.ECE4) ocp-tool> git checkout --track origin/refactor-for-se
+
+Thereafter, the OCP-Tool is installed into the :file:`.ECE4` virtual
+environment::
+
+    (.ECE4) ocp-tool> pip install -e .
+
+.. note::
+
+    The installation of the OCP-Tools is still a bit difficult at the moment,
+    because it is still very much under development. The last three steps could
+    be much simplified by providing an OCP-Tool package at Pypi and this will be
+    considered in the future.
