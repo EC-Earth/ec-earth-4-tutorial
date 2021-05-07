@@ -19,7 +19,9 @@ Checking out the EC-Earth 4 source code
 
 The |ece4| source code is provided as a Subversion repository at the EC-Earth
 Development Portal. To get the current version of the code, use your login
-credentials and check out::
+credentials and check out:
+
+.. code-block:: bash
 
     > svn checkout https://svn.ec-earth.org/ecearth4/trunk ece-4
 
@@ -47,7 +49,9 @@ ScriptEngine installation (including other installation options like `Conda
 <https://conda.io>`_), have a look at the `ScriptEngine documentation
 <https://scriptengine.readthedocs.io/en/latest/installation.html>`_
 
-As a first step, check the Python version available by default::
+As a first step, check the Python version available by default:
+
+.. code-block:: bash
 
     ece-4 > python --version
     Python 3.8.3
@@ -58,7 +62,9 @@ matter.  On some systems, the default ``python`` executable may still point to
 some Python2 version.  In this case, try ``python3 --version`` and use
 ``python3`` also in the next step.
 
-Now, create a new virtual environment in the |ece4| directory with::
+Now, create a new virtual environment in the |ece4| directory with:
+
+.. code-block:: bash
 
     ece-4> python -m venv .ECE4
 
@@ -74,11 +80,15 @@ which will create a :file:`.ECE4` directory for the environment.
 The virtual Python environment is only *created* once, but it has to be
 *activated* each time it is to be used, and also for each shell it is to be
 used in. Activating the virtual environment is done by sourcing the
-:file:`activate` script in the environment directory::
+:file:`activate` script in the environment directory:
+
+.. code-block:: bash
 
     ece-4> source .ECE4/bin/activate
 
-after which the prompt should change to show the activation status::
+after which the prompt should change to show the activation status:
+
+.. code-block:: bash
 
     (.ECE4) ece-4>
 
@@ -92,7 +102,9 @@ that the environment must be activated.
     typing ``. activate`` in the :file:`ece-4` directory.
 
 It is always a good idea to upgrade the Python package manager, :file:`pip`, in
-a new virtual environment::
+a new virtual environment:
+
+.. code-block:: bash
 
     (.ECE4) ece-4> pip install -U pip
 
@@ -103,16 +115,22 @@ Installing ScriptEngine
 -----------------------
 
 Since ScriptEngine is provided as a package at `PyPi <https://pypi.org>`_, it
-can easily be installed with :file:`pip`::
+can easily be installed with :file:`pip`:
+
+.. code-block:: bash
 
     (.ECE4) ece-4> pip install scriptengine
 
 Some of the runtime scripts use a particular ScriptEngine task package, so it
-is best installed right away::
+is best installed right away:
+
+.. code-block:: bash
 
     (.ECE4) ece-4> pip install scriptengine-tasks-hpc
 
-This completes the ScriptEngine installation. It can be tested with::
+This completes the ScriptEngine installation. It can be tested with:
+
+.. code-block:: bash
 
     (.ECE4) ece-4> se --version
     0.8.5
@@ -131,19 +149,25 @@ The original implementation has been `extended
 components in the GCM configuration. Hence, we will have to use the extended
 version until the changes are merged.
 
-Download and install the OCP-Tool in the EC-Earth 4 virtual environment::
+Download and install the OCP-Tool in the EC-Earth 4 virtual environment:
+
+.. code-block:: bash
 
     (.ECE4) ece-4> cd ..
     (.ECE4) > git clone https://github.com/uwefladrich/ocp-tool
     (.ECE4) > cd ocp-tool
 
 The code that adapts the OCP-Tool to |ece4| is currently developed in a
-branch, which is checked out with::
+branch, which is checked out with:
+
+.. code-block:: bash
 
     (.ECE4) ocp-tool> git checkout --track origin/refactor-for-se
 
 Thereafter, the OCP-Tool is installed into the :file:`.ECE4` virtual
-environment::
+environment:
+
+.. code-block:: bash
 
     (.ECE4) ocp-tool> pip install -e .
 
@@ -155,7 +179,9 @@ environment::
     considered in the future.
 
 Once the installation of the OCP-Tool is successful, we can go back to the
-|ece4| directory::
+|ece4| directory:
+
+.. code-block:: bash
 
     (.ECE4) ocp-tool> cd ../ece-4
     (.ECE4) ece-4>
