@@ -43,8 +43,8 @@ provided as Python packages. It is usually a good idea to install packages in
 user space and a `Python virtual environment
 <https://docs.python.org/3/tutorial/venv.html>`_ will be used in this
 tutorial to install all requirements. For a detailed description of
-ScriptEngine installation options, have a look at the `ScriptEngine
-documentation
+ScriptEngine installation (including other installation options like `Conda
+<https://conda.io>`_), have a look at the `ScriptEngine documentation
 <https://scriptengine.readthedocs.io/en/latest/installation.html>`_
 
 As a first step, check the Python version available by default::
@@ -78,11 +78,11 @@ used in. Activating the virtual environment is done by sourcing the
 
     ece-4> source .ECE4/bin/activate
 
-after which, the prompt should change to show the activation status::
+after which the prompt should change to show the activation status::
 
     (.ECE4) ece-4>
 
-This prompt will be used in the examples of this tutorial, to keep reminding
+This prompt will be used in the examples of this tutorial, providing a reminder
 that the environment must be activated.
 
 .. hint::
@@ -123,6 +123,14 @@ This completes the ScriptEngine installation. It can be tested with::
 Installing the OCP-Tool
 -----------------------
 
+The `OCP-Tool <https://github.com/JanStreffing/ocp-tool>`_ is used in |ece4| to
+automatically create most of the grid description files needed by the OASIS3-MCT
+coupler for the combination of grids that is used for a particular experiment.
+The original implementation has been `extended
+<https://github.com/uwefladrich/ocp-tool>`_ to include the grids of all |ece4|
+components in the GCM configuration. Hence, we will have to use the extended
+version until the changes are merged.
+
 Download and install the OCP-Tool in the EC-Earth 4 virtual environment::
 
     (.ECE4) ece-4> cd ..
@@ -145,3 +153,12 @@ environment::
     because it is still very much under development. The last three steps could
     be much simplified by providing an OCP-Tool package at Pypi and this will be
     considered in the future.
+
+Once the installation of the OCP-Tool is successful, we can go back to the
+|ece4| directory::
+
+    (.ECE4) ocp-tool> cd ../ece-4
+    (.ECE4) ece-4>
+
+This completes the preparations of the tutorial and the |ece4| is now installed
+along with all tools needed to build and run it.
