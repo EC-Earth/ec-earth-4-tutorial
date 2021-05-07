@@ -60,4 +60,6 @@ rst_prolog = """
    :trim:
 
 .. |ece4| replace:: EC-Earth |nnbsp| 4
+
+.. |ece3| replace:: EC-Earth |nnbsp| 3
 """
