@@ -17,7 +17,9 @@ branches, steps to build or run the model, and supported features. It is
 therefore advised to double check the latest on-line version of the tutorial
 in case of problems.
 
-- currently some steps are more complicated than they should be
+The experimental state of development also implies that some of the steps are
+more complicated than they ought to be. Whenever this is the case, the tutorial
+mentions this and improvements can be expected.
 
 The sources for this tutorial (not the model code!) are `hosted at Github
 <https://github.com/uwefladrich>`_ and automatically `published to Read the
@@ -29,15 +31,19 @@ contributing to the tutorial with `a pull request`_.
 - corresponding ECE Dev Portal issue/wiki page
   (complementing information)
 
-This tutorial is based on `ScriptEngine
-<https://scriptengine.readthedocs.io>`_ for building |ece4| and making simple
-test runs, and instructions how to install ScriptEngine are therefore included.
+This tutorial is based on and covers:
+
+- the trunk version of |ece4|, including OpenIFS 43r3v1 and NEMO 4.0.1
+- the `ScriptEngine <https://scriptengine.readthedocs.io>`_ build and runtime environment
+- the OCP-Tool for automatic creation of coupling information
+- AMIP and GCM configurations
+
 
 .. note::
 
-    It is possible to manually prepare Makefiles, configurations and run
-    scripts, thus building and running |ece4| without using ScriptEngine.
-    However, this is not the topic of this tutorial.
+    It is possible to prepare Makefiles, configurations and run scripts
+    manually, thus building and running |ece4| without using ScriptEngine.
+    However, this is not covered in this tutorial.
 
 
 .. _a pull request: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/proposing-changes-to-your-work-with-pull-requests
