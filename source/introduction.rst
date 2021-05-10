@@ -28,15 +28,20 @@ problems with the tutorial as such, please `open an issue
 <https://github.com/uwefladrich/issues>`_ in the Github project or consider
 contributing to the tutorial with `a pull request`_.
 
-- corresponding ECE Dev Portal issue/wiki page
-  (complementing information)
+However, some information that complements the tutorial is not openly available,
+due to licensing issues (e.g. access to initial state data). This type of
+information is therefore kept separately at the EC-Earth Development Portal, on
+`a Wiki page
+<https://dev.ec-earth.org/projects/ec-earth-4/wiki/EC-Earth_4_Tutorial>`_
+(account required). However, as much information as possible is kept open in
+this tutorial.
 
-This tutorial is based on and covers:
-
-- the trunk version of |ece4|, including OpenIFS 43r3v1 and NEMO 4.0.1
-- the `ScriptEngine <https://scriptengine.readthedocs.io>`_ build and runtime environment
-- the OCP-Tool for automatic creation of coupling information
-- AMIP and GCM configurations
+This tutorial is based on the trunk version of |ece4|, which, at the moment,
+includes OpenIFS 43r3v1 and NEMO 4.0.1. The `ScriptEngine
+<https://scriptengine.readthedocs.io>`_ software is used to handle the build and
+runtime environment scripts and the OCP-Tool for automatic creation of the OASIS
+coupler set-up (see the :ref:`Preparations` section for details). The tutorial covers the AMIP (atmosphere-only) and GCM
+(atmosphere-ocean) configurations of |ece4|.
 
 
 .. note::
