@@ -131,5 +131,134 @@ all component scripts for that stage, if they exist.
 
 Note that there is an artificial model component, called ``main``, which is
 executed first in all stages. The corresponding ``scripts/<stage>-main.yml``
-files include tasks that are general and not associated with a particular
+files includes tasks that are general and not associated with a particular
 component of the model.
+
+
+Running batch jobs from ScriptEngine
+------------------------------------
+
+ScriptEngine can send jobs to the batch system when the
+``scriptengine-tasks-hpc`` package is installed, as described in  the
+:ref:`Preparations` section. Here is an example of the ``hpc.slurm.sbatch`` task
+in ``ece-4.yml``::
+
+    # Submit batch job
+    - hpc.slurm.sbatch:
+        account: my_slurm_account
+        nodes: 14
+        time: !noparse 0:30:00
+        job-name: "ece-4-{{main.experiment_id}}"
+        output: job.out
+        error: job.out
+
+What this task does is to run the entire ``se`` command, including all scripts
+given at the command line, as a batch job with the given arguments (e.g.
+account, number of nodes, and so on).
+
+As a simplified example, a ScriptEngine script such as::
+
+    - hpc.slurm.sbatch:
+        account: my_slurm_account
+        nodes: 1
+        time: !noparse 0:30:00
+    - base.echo:
+        msg: Hello from batch job!
+
+would in the first place submit a batch job and then stop. When the batch job
+executes, the first task (``hpc.slurm.sbatch``) would execute again, but do
+nothing because it already runs in a batch job. Then, the next task
+(``base.echo``) would be executed, writing the message to standard output in the
+batch job.
+
+.. important:: The ``scriptengine-tasks-hpc`` package provides only support for
+            SLURM at the moment. Support for the PBS scheduler is highly
+            prioritised, but hasn't been implemented due to some peculiarities
+            of the ``qsub`` command. However, it is expected that this can be
+            sorted out soon.
+
+
+The experiment schedule
+-----------------------
+
+ScriptEngine supports recurrence rules (rrules, `RFC 5545
+<https://datatracker.ietf.org/doc/html/rfc5545>`_) via the Python `rrule
+module <https://dateutil.readthedocs.io/en/stable/rrule.html>`_ in order to
+define schedules with recurring events.
+
+This is used in the SE RTE to specify the experiment schedule, with start date,
+leg restart dates, and end date. This allows a great deal of flexibility when
+defining the experiment, allowing for irregular legs with restarts at almost any
+combination of dates.
+
+.. warning:: Event though rrules provide a lot of flexibility for the experiment
+            schedule, it is not certain that all parts of the SE RTE and the
+            model code can deal with arbitrary start/restart dates. This feature
+            is provided in order to not limit the definition of a schedule at a
+            technical level in the RTE.
+
+A simple schedule with yearly restarts could look like::
+
+    - base.context:
+        schedule:
+            all: !rrule >
+                DTSTART:19900101
+                RRULE:FREQ=YEARLY;UNTIL=20000101
+
+which would define the start date of the experiment as 1990-01-01 00:00 and
+yearly restart on the 1st of January until the end date 2000-01-01 00:00 is
+reached, i.e. 10 legs.
+
+As another example, two-year legs from 1850 until 1950 would be defined as::
+
+    - base.context:
+        schedule:
+            all: !rrule >
+                DTSTART:18500101
+                RRULE:FREQ=YEARLY;INTERVAL=2;UNTIL=19500101
+
+
+The ``run.sh`` template
+-----------------------
+
+The start of the model component executables in the appropriate MPI environment
+is handled via a short shell script that is produced from a template. This
+happens in the ``setup-main.yml`` script::
+
+    - base.template:
+        src: run-gcc+ompi.sh.j2
+        dst: run.sh
+
+which picks the given run script template (``run-gcc+openmpi.sh.j2`` in this
+case) from the ``templates/`` directory, runs it through Jinja2, and places the
+resulting script under the name ``run.sh`` in the run directory. From there, it
+is later started in the "run" stage by ``scripts/run.yml``::
+
+    - base.command:
+        name: sh
+        args: [run.sh]
+
+There are, at the moment, a number of platform dependencies hidden in the run
+script template and the whole process is still under development in order to
+provide a robust and portable mechanism to start the MPI processes. One idea is
+to support starting MPI processes directly from a ScriptEngine task in
+``scriptengine-tasks-hpc``.
+
+
+Minimal set of changes
+----------------------
+
+In the simplest case, only few things have to be changed in order to run a
+simple experiment:
+
+- ``main.inidir`` in ``config-main.yml``
+- ``nemo.initial_state`` in ``config-nemo.yml``
+- ``main.schedule`` in ``ece-4.yml``
+- possibly adaptations in the run script template
+- batch job details in the batch submission task of ``ece-4.yml``
+
+Once all changes are made, a run can be started by:
+
+.. code-block:: bash
+
+    (.ECE4) se > se TEST.yml ece-4.yml
