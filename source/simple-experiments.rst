@@ -22,7 +22,7 @@ provided in ``runtime/se`` and subdirectories:
     scripts/
     templates/
     TEST.yml
-    ece-4.yml
+    main.yml
 
 The ScriptEngine runtime environment (SE RTE) is split into separate YAML
 scripts, partly with respect to the model component they are dealing with, and
@@ -39,10 +39,10 @@ Main structure of the run scripts
 ---------------------------------
 
 Two top level scripts are present in the ``runtime/se`` directory: ``TEST.yml``
-and ``ece-4.yml``. The logic of the SE RTE follows the same as for the building
+and ``main.yml``. The logic of the SE RTE follows the same as for the building
 process, namely that ScriptEngine can process multiple scripts, in order, given
 at the command line. Thus, ``TEST.yml`` is an example script that defines a few
-experiment specific configuration parameters, while ``ece-4.yml`` contains the
+experiment specific configuration parameters, while ``main.yml`` contains the
 main logic of the run scripts.
 
 Looking at ``TEST.yml`` first, we find just two configuration parameters::
@@ -55,11 +55,11 @@ Looking at ``TEST.yml`` first, we find just two configuration parameters::
 
 There could be more configuration parameters put in this script, if they are
 expected to change with the experiment set-up. This means that configuration
-parameter definitions could be moved here from ``ece-4.yml`` (or any script
+parameter definitions could be moved here from ``main.yml`` (or any script
 called from there). For the purpose of this tutorial, this simple approach will
 suffice.
 
-The main top-level ``ece-4.yml`` script defines a list of components
+The main top-level ``main.yml`` script defines a list of components
 (``main.components``)::
 
     - base.context:
@@ -84,7 +84,7 @@ AMIP-Forcing-reader) would be::
                 - xios
                 - amipfr
 
-The main structure of ``ece-4.yml`` proceeds then as follows::
+The main structure of ``main.yml`` proceeds then as follows::
 
     # Configure 'main' and all components
     - base.include:
@@ -126,8 +126,8 @@ Not every stage has to be present in each model run, and not all stages have to
 be present for all components. For all stages and components that are present,
 there is a corresponding ``scripts/<stage>-<component>.yml`` script, which is
 included (via the ``base.include`` ScriptEngine task). Hence, the main
-implementation logic of ``ece-4.yml`` is to go through all stages and execute
-all component scripts for that stage, if they exist.
+implementation logic of ``main.yml`` is to go through all stages and execute all
+component scripts for that stage, if they exist.
 
 Note that there is an artificial model component, called ``main``, which is
 executed first in all stages. The corresponding ``scripts/<stage>-main.yml``
@@ -141,7 +141,7 @@ Running batch jobs from ScriptEngine
 ScriptEngine can send jobs to the batch system when the
 ``scriptengine-tasks-hpc`` package is installed, as described in  the
 :ref:`Preparations` section. Here is an example of the ``hpc.slurm.sbatch`` task
-in ``ece-4.yml``::
+in ``main.yml``::
 
     # Submit batch job
     - hpc.slurm.sbatch:
@@ -245,20 +245,85 @@ to support starting MPI processes directly from a ScriptEngine task in
 ``scriptengine-tasks-hpc``.
 
 
+Initial data
+------------
+
+The directory with initial data for |ece4| is configured in
+``scripts/config-main.yml``::
+
+    - base.context:
+          main:
+              # ...
+              inidir:  <PATH/TO/THE/ECE-4/INITDATA>
+
+For now, the set if initial data can be downloaded from the SMHI Publisher at
+NSC, the link is given on the |ece4| `Tutorial Wiki page`_ at the EC-Earth
+Development Portal.
+
+.. note:: An account is needed to access the EC-Earth Development Portal,
+        because the information is restricted to EC-Earth consortium member
+        institutes.
+
+.. _Tutorial Wiki page: https://dev.ec-earth.org/projects/ec-earth-4/wiki/EC-Earth_4_Tutorial
+
+
 Minimal set of changes
 ----------------------
 
 In the simplest case, only few things have to be changed in order to run a
 simple experiment:
 
-- ``main.inidir`` in ``config-main.yml``
-- ``nemo.initial_state`` in ``config-nemo.yml``
-- ``main.schedule`` in ``ece-4.yml``
+- ``main.inidir`` in ``scripts/config-main.yml``
+- ``nemo.initial_state`` in ``scripts/config-nemo.yml``
+- ``main.schedule`` in ``scripts/main.yml``
 - possibly adaptations in the run script template
-- batch job details in the batch submission task of ``ece-4.yml``
+- batch job details in the batch submission task of ``scripts/main.yml``
 
 Once all changes are made, a run can be started by:
 
 .. code-block:: bash
 
-    (.ECE4) se > se TEST.yml ece-4.yml
+    (.ECE4) se > se TEST.yml main.yml
+
+
+Changing the OpenIFS grid
+-------------------------
+
+Using the extended version of the OCP-Tools (see :ref:`Installing the OCP-Tool`)
+allows to select one of the predefined grids in ``scripts/config-oifs.yml``::
+
+  - base.context:
+        oifs:
+            grids:
+                TL255L91:
+                    # ...
+                    dt: 2700
+                TCO159L91:
+                    # ...
+                    dt: 2700
+                TCO95L91:
+                    # ...
+                    dt: 2700
+                TCO95L137:
+                    # ...
+                    dt: 2700
+  - base.context:
+        oifs:
+            # ...
+            grid: "{{oifs.grids.TCO95L91}}"
+
+The first of the two ``base.context`` tasks defines a number of OpenIFS grids
+and the second task chooses one of the grids for the actual experiment settings.
+Note that the time step settings for different grids have not yet been tested,
+therefore a default of 2700 (seconds) is used for all grids. This is most likely
+not appropriate for all grids and needs to be adapted.
+
+The OpenIFS grid can be chosen for both AMIP and GCM configurations, the
+OCP-Tool extensions will set up the correct combination of OpenIFS, NEMO,
+runoff-mapper, or AMIP-forcing-reader grids, as appropriate.
+
+However, note that the remapping weights for OASIS3-MCT are computed at the
+start-up of the first leg! This will take some extra computing time,
+particularly for higher resolution. Work is ongoing to configure the weight
+computation in a way that allows parallelisation, thereby reducing the
+substantial overhead.
