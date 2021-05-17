@@ -18,10 +18,53 @@ be of different dimensions and cells will map differently to the earth surface.
 Processing atmosphere data with CDO
 -----------------------------------
 
+CDO can remap grids from reduced to regular Gaussian grids with the ``setgridtype,regular``
+command. However, the netCDF files produced by XIOS cannot be processed directly by CDO
+because they are supposedly unstructured. The trick is to add a proper grid description
+before applying the ``setgridtype`` command. There are 2 ways to achieve this:
+
 .. code-block:: Bash
 
-    (.ECE4) > cdo griddes <OIFS_INI_FILE> > griddes.txt
+    (.ECE4) > cdo -L setgridtype,regular -setgrid,<OIFS_INIGG_FILE> output.nc regular_output.nc
+
+where ``<OIFS_INIGG_FILE>`` is the ``ICMGG*INIT`` file from your simulation. Don't worry that
+the initial file is in GRIB, CDO will handle that.
+
+If you have to process many files it could be helpful to prepare a grid description file
+instead of reading the same GRIB file every time you process an output file. This grid
+description file is created with
+
+.. code-block:: Bash
+
+    (.ECE4) > cdo griddes <OIFS_INIGG_FILE> > griddes.txt
+
+Then we add this grid description on the fly to process the ``output.nc`` file:
+
+.. code-block:: Bash
+
     (.ECE4) > cdo -L setgridtype,regular -setgrid,griddes.txt output.nc regular_output.nc
+
+The grid description file can be re-used every time you process output on the same grid.
+
+The ``-L`` flag added in either method is optional but helps avoiding I/O errors that frequently
+occur with netCDF4/HDF5 files.
+
+The above method works with linear reduced as well as with cubic orthogonal grids, all the grid
+information is in the ICMGG*INIT file. For spectral output (spherical harmonics) we need to
+distinguish between the Tl and Tco case. To process specral fields on the Tl grid one would use
+
+.. code-block:: Bash
+
+    (.ECE4) > cdo -f nc4c -z zip -L sp2gp,linear output regular_output.nc
+
+and for fields on the Tco grid
+
+.. code-block:: Bash
+
+    (.ECE4) > cdo -f nc4c -z zip -L sp2gp,cubic output regular_output.nc
+
+Note that older versions of CDO had ``sp2gpl`` which is just a short version of ``sp2gp,linear``,
+the short form is obsolete and will disappear in the future.
 
 
 Processing atmosphere data with Iris
