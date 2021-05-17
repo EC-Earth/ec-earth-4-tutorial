@@ -23,6 +23,7 @@ EC-Earth 4 Getting Started Tutorial
    preparations
    building
    simple-experiments
+   data-analysis
 
 
 Indices and tables
