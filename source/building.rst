@@ -76,7 +76,7 @@ The basic approach for building the |ece4| components, will be to call the
 scripts for user settings, the platform settings and the actual compilation
 commands in one go::
 
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-<COMPONENT>.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-<COMPONENT>.yml
     
 .. note:: It is important to always include the user and platform settings
           scripts in every compilation! The settings are not magically stored
@@ -213,20 +213,20 @@ AMIP configuration, this could be done by:
 
 .. code-block:: bash
 
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-oasis.yml
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-xios.yml
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-oifs.yml
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-amipfr.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-oasis.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-xios.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-oifs.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-amipfr.yml
     
 and for the GCM configuration by:
 
 .. code-block:: bash
 
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-oasis.yml
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-xios.yml
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-oifs.yml
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-nemo.yml
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-rnfm.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-oasis.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-xios.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-oifs.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-nemo.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-rnfm.yml
 
 When this approach works properly, you can compile the configuration in one go,
 either by adding all compilation scripts at once:
@@ -234,7 +234,7 @@ either by adding all compilation scripts at once:
 .. code-block:: bash
 
     (.ECE4) se> se user-settings.yml \
-                   platform/<MY_PLATFORM>.yml \
+                   platforms/<MY_PLATFORM>.yml \
                    compile-oasis.yml \
                    compile-xios.yml \
                    compile-oifs.yml \
@@ -245,7 +245,7 @@ or by using the convenience script ``compile-all.yml``:
 
 .. code-block:: bash
 
-    (.ECE4) se> se user-settings.yml platform/<MY_PLATFORM>.yml compile-all.yml
+    (.ECE4) se> se user-settings.yml platforms/<MY_PLATFORM>.yml compile-all.yml
 
 The ``compile-all.yml`` script compiles *all* components (both for AMIP and GCM
 configurations) and allows also to configure the build process by setting
