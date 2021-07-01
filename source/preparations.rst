@@ -133,9 +133,9 @@ This completes the ScriptEngine installation. It can be tested with:
 .. code-block:: bash
 
     (.ECE4) ece-4> se --version
-    0.8.5
+    0.9.0
 
-(Note that the version can differ, but it should not be lower than 0.8.5)
+(Note that the version can differ, but it should not be lower than 0.9.0)
 
 
 Installing the OCP-Tool
