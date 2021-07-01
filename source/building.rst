@@ -103,8 +103,7 @@ the path of the |ece4| source code::
 
     # User-dependent configuration for EC-Earth 4 build
     - base.getenv:
-        name: HOME
-        set:  home
+        home: HOME
     - base.context:
         main:
             base_dir: "{{home}}/Projects/ece-4"
