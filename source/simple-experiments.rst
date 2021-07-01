@@ -19,16 +19,16 @@ provided in ``runtime/se`` and subdirectories:
 
     (.ECE4) ece-4 > cd runtime/se
     (.ECE4) se > ls -1
-    scripts/
+    example.yml
+    scriptlib/
     templates/
-    TEST.yml
-    main.yml
 
 The ScriptEngine runtime environment (SE RTE) is split into separate YAML
 scripts, partly with respect to the model component they are dealing with, and
 partly with respect to the runtime stage they belong to. This is done in order
 to provide a modular approach for different configurations and avoid overly
-complex scripts and duplication.
+complex scripts and duplication. Most of the YAML scripts are provided in the
+``scriptlib`` subdirectory.
 
 However, this splitting is not "build into" ScriptEngine or the SE RTE, it is
 entirely up to the user to adapt the scripts for her needs, possibly splitting
@@ -38,14 +38,20 @@ up the scripts in vastly different ways.
 Main structure of the run scripts
 ---------------------------------
 
-Two top level scripts are present in the ``runtime/se`` directory: ``TEST.yml``
-and ``main.yml``. The logic of the SE RTE follows the same as for the building
-process, namely that ScriptEngine can process multiple scripts, in order, given
-at the command line. Thus, ``TEST.yml`` is an example script that defines a few
-experiment specific configuration parameters, while ``main.yml`` contains the
-main logic of the run scripts.
+In order to use and control the modular YAML scripts provided under
+``scriptlib``, the user has to provide a top level run script. To make this task
+easier, an example script (``example.yml``) is provided.
 
-Looking at ``TEST.yml`` first, we find just two configuration parameters::
+The top level run script defines a number of configuration parameters before it
+calls ``scriptlib/main.yml`` (using the ScriptEngine ``base.include`` task),
+which controls the actual model execution phases.
+
+Exactly which configuration parameters are included in the top level script is
+up to the user and should be adapted to the experiment needs. The example script
+defines very basic settings, like the experiment ID, the experiment schedule,
+the model components, and a few more.
+
+As an example, this is how the experiment ID and a description are defined::
 
     base.context:
     main:
@@ -55,12 +61,11 @@ Looking at ``TEST.yml`` first, we find just two configuration parameters::
 
 There could be more configuration parameters put in this script, if they are
 expected to change with the experiment set-up. This means that configuration
-parameter definitions could be moved here from ``main.yml`` (or any script
-called from there). For the purpose of this tutorial, this simple approach will
-suffice.
+parameter definitions could be moved here from ``scriptlib/main.yml`` (or any
+script called from there). For the purpose of this tutorial, this simple
+approach will suffice.
 
-The main top-level ``main.yml`` script defines a list of components
-(``main.components``)::
+The top level script defines a list of components (``main.components``)::
 
     - base.context:
         main:
@@ -84,11 +89,11 @@ AMIP-Forcing-reader) would be::
                 - xios
                 - amipfr
 
-The main structure of ``main.yml`` proceeds then as follows::
+The main structure of ``scriptlib/main.yml`` proceeds then as follows::
 
     # Configure 'main' and all components
     - base.include:
-        src: "scripts/config-{{component}}.yml"
+        src: "scriptlib/config-{{component}}.yml"
         ignore_not_found: yes
       loop:
         with: component
@@ -124,13 +129,13 @@ Basically, the run script defines the following stages:
 
 Not every stage has to be present in each model run, and not all stages have to
 be present for all components. For all stages and components that are present,
-there is a corresponding ``scripts/<stage>-<component>.yml`` script, which is
+there is a corresponding ``scriptlib/<stage>-<component>.yml`` script, which is
 included (via the ``base.include`` ScriptEngine task). Hence, the main
 implementation logic of ``main.yml`` is to go through all stages and execute all
 component scripts for that stage, if they exist.
 
 Note that there is an artificial model component, called ``main``, which is
-executed first in all stages. The corresponding ``scripts/<stage>-main.yml``
+executed first in all stages. The corresponding ``scriptlib/<stage>-main.yml``
 files includes tasks that are general and not associated with a particular
 component of the model.
 
@@ -141,7 +146,7 @@ Running batch jobs from ScriptEngine
 ScriptEngine can send jobs to the batch system when the
 ``scriptengine-tasks-hpc`` package is installed, as described in  the
 :ref:`Preparations` section. Here is an example of the ``hpc.slurm.sbatch`` task
-in ``main.yml``::
+in ``example.yml``::
 
     # Submit batch job
     - hpc.slurm.sbatch:
@@ -223,7 +228,7 @@ The ``run.sh`` template
 
 The start of the model component executables in the appropriate MPI environment
 is handled via a short shell script that is produced from a template. This
-happens in the ``setup-main.yml`` script::
+happens in the ``scriptlib/setup-main.yml`` script::
 
     - base.template:
         src: run-gcc+ompi.sh.j2
@@ -232,7 +237,7 @@ happens in the ``setup-main.yml`` script::
 which picks the given run script template (``run-gcc+openmpi.sh.j2`` in this
 case) from the ``templates/`` directory, runs it through Jinja2, and places the
 resulting script under the name ``run.sh`` in the run directory. From there, it
-is later started in the "run" stage by ``scripts/run.yml``::
+is later started in the "run" stage by ``scriptlib/run.yml``::
 
     - base.command:
         name: sh
@@ -249,12 +254,12 @@ Initial data
 ------------
 
 The directory with initial data for |ece4| is configured in
-``scripts/config-main.yml``::
+``example.yml``::
 
     - base.context:
           main:
               # ...
-              inidir:  <PATH/TO/THE/ECE-4/INITDATA>
+              inidir:  /path/to/your/initial-data
 
 For now, the set if initial data can be downloaded from the SMHI Publisher at
 NSC, the link is given on the |ece4| `Tutorial Wiki page`_ at the EC-Earth
@@ -270,53 +275,37 @@ Development Portal.
 Minimal set of changes
 ----------------------
 
-In the simplest case, only few things have to be changed in order to run a
+In the simplest case, only few things have to be changed in ``example.yml`` (or
+the corresponding top level script provided by the user) in order to run a
 simple experiment:
 
-- ``main.inidir`` in ``scripts/config-main.yml``
-- ``nemo.initial_state`` in ``scripts/config-nemo.yml``
-- ``main.schedule`` in ``scripts/main.yml``
+- ``main.inidir``
+- ``nemo.initial_state``
+- ``main.schedule``
 - possibly adaptations in the run script template
-- batch job details in the batch submission task of ``scripts/main.yml``
+- batch job details in the batch submission task
 
 Once all changes are made, a run can be started by:
 
 .. code-block:: bash
 
-    (.ECE4) se > se TEST.yml main.yml
+    (.ECE4) se > se example.yml
 
 
 Changing the OpenIFS grid
 -------------------------
 
 Using the extended version of the OCP-Tools (see :ref:`Installing the OCP-Tool`)
-allows to select one of the predefined grids in ``scripts/config-oifs.yml``::
+allows to select one of the predefined grids in ``example.yml``::
 
   - base.context:
         oifs:
-            grids:
-                TL255L91:
-                    # ...
-                    dt: 2700
-                TCO159L91:
-                    # ...
-                    dt: 2700
-                TCO95L91:
-                    # ...
-                    dt: 2700
-                TCO95L137:
-                    # ...
-                    dt: 2700
-  - base.context:
-        oifs:
-            # ...
-            grid: "{{oifs.grids.TCO95L91}}"
+            select_grid: !noparse_jinja "{{oifs.grids.TCO95L91}}"
 
-The first of the two ``base.context`` tasks defines a number of OpenIFS grids
-and the second task chooses one of the grids for the actual experiment settings.
-Note that the time step settings for different grids have not yet been tested,
-therefore a default of 2700 (seconds) is used for all grids. This is most likely
-not appropriate for all grids and needs to be adapted.
+The list of supported grids can be found in ``scriptlib/config-oifs.yml``,
+together with the corresponding number of vertical levels and time steps.
+Note that the time step settings for different grids have not yet been
+thoroughly tested, and relies on `ECMWF recommendations`_.
 
 The OpenIFS grid can be chosen for both AMIP and GCM configurations, the
 OCP-Tool extensions will set up the correct combination of OpenIFS, NEMO,
@@ -327,3 +316,11 @@ start-up of the first leg! This will take some extra computing time,
 particularly for higher resolution. Work is ongoing to configure the weight
 computation in a way that allows parallelisation, thereby reducing the
 substantial overhead.
+
+.. warning:: When choosing the OpenIFS grid, the time step is solely based on
+            the ECMWF recommendations. No automatic adaptation of the time step
+            to the coupling time step is done for GCM configurations! This means
+            that if OpenIFS, NEMO and coupling time step are not consistent, the
+            model with most likely crash.
+
+.. _ECMWF recommendations: https://confluence.ecmwf.int/display/OIFS/4.3+OpenIFS%3A+Horizontal+Resolution+and+Configurations

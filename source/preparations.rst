@@ -149,33 +149,21 @@ The original implementation has been `extended
 components in the GCM configuration. Hence, we will have to use the extended
 version until the changes are merged.
 
-Download and install the OCP-Tool in the EC-Earth 4 virtual environment:
+The OCP-Tool is downloaded (cloned) from Github and installed locally in the
+EC-Earth 4 virtual environment:
 
 .. code-block:: bash
 
     (.ECE4) ece-4> cd ..
     (.ECE4) > git clone https://github.com/uwefladrich/ocp-tool
     (.ECE4) > cd ocp-tool
-
-The code that adapts the OCP-Tool to |ece4| is currently developed in a
-branch, which is checked out with:
-
-.. code-block:: bash
-
-    (.ECE4) ocp-tool> git checkout --track origin/refactor-for-se
-
-Thereafter, the OCP-Tool is installed into the :file:`.ECE4` virtual
-environment:
-
-.. code-block:: bash
-
     (.ECE4) ocp-tool> pip install -e .
 
 .. note::
 
     The installation of the OCP-Tools is still a bit difficult at the moment,
-    because it is still very much under development. The last three steps could
-    be much simplified by providing an OCP-Tool package at Pypi and this will be
+    because it is still very much under development. The last steps could be
+    much simplified by providing an OCP-Tool package at Pypi and this will be
     considered in the future.
 
 Once the installation of the OCP-Tool is successful, we can go back to the
