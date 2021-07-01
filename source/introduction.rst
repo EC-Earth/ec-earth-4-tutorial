@@ -22,11 +22,11 @@ more complicated than they ought to be. Whenever this is the case, the tutorial
 mentions this and improvements can be expected.
 
 The sources for this tutorial (not the model code!) are `hosted at Github
-<https://github.com/uwefladrich>`_ and automatically `published to Read the
-Docs <https://ece-4-tutorial.readthedocs.io>`_ on every change. If there are
-problems with the tutorial as such, please `open an issue
-<https://github.com/uwefladrich/issues>`_ in the Github project or consider
-contributing to the tutorial with `a pull request`_.
+<https://github.com/EC-Earth/ec-earth-4-tutorial>`_ and automatically `published
+to Read the Docs <https://ece-4-tutorial.readthedocs.io>`_ on every change. If
+there are problems with the tutorial as such, please `open an issue
+<https://github.com/EC-Earth/ec-earth-4-tutorial/issues>`_ in the Github project
+or consider contributing to the tutorial with `a pull request`_.
 
 However, some information that complements the tutorial is not openly available,
 due to licensing issues (e.g. access to initial state data). This type of
