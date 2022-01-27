@@ -20,6 +20,7 @@ provided in ``runtime/se`` and subdirectories:
     (.ECE4) ece-4 > cd runtime/se
     (.ECE4) se > ls -1
     example.yml
+    example-slurm.yml
     scriptlib/
     templates/
 
@@ -40,7 +41,13 @@ Main structure of the run scripts
 
 In order to use and control the modular YAML scripts provided under
 ``scriptlib``, the user has to provide a top level run script. To make this task
-easier, an example script (``example.yml``) is provided.
+easier, an example script (``example.yml``) is provided. The ``example.yml``
+script is rather simplistic. It allows for configuring of some basic experiment
+settings, but it does in particular not provide control over the batch job settings
+used for the experiment run (only the number of MPI processes per component).
+Hence, a slightly more complicated example script, ``example-slurm.yml``, is provided,
+which allows for the configuration of further batch job details. However, the two
+example scripts share most of the configuration details explained below.
 
 The top level run script defines a number of configuration parameters before it
 calls ``scriptlib/main.yml`` (using the ScriptEngine ``base.include`` task),
@@ -143,7 +150,7 @@ component of the model.
 Running batch jobs from ScriptEngine
 ------------------------------------
 
-ScriptEngine can send jobs to the batch system when the
+ScriptEngine can send jobs to the SLURM batch system when the
 ``scriptengine-tasks-hpc`` package is installed, as described in  the
 :ref:`Preparations` section. Here is an example of the ``hpc.slurm.sbatch`` task
 in ``example.yml``::
@@ -177,10 +184,14 @@ nothing because it already runs in a batch job. Then, the next task
 batch job.
 
 .. important:: The ``scriptengine-tasks-hpc`` package provides only support for
-            SLURM at the moment. Support for the PBS scheduler is highly
-            prioritised, but hasn't been implemented due to some peculiarities
-            of the ``qsub`` command. However, it is expected that this can be
-            sorted out soon.
+            SLURM at the moment. Support for the PBS scheduler is envisaged, but
+            hasn't been implemented due to some peculiarities of the ``qsub``
+            command. Since SLURM is the prevalent job scheduler on most HPC
+            systems (with the noteable exception of the ECMWF cca/b systems), it
+            is at the moment unclear if PBS support can be prioritised any time
+            soon. For any input on this issue, please check out related issues at
+            the `scriptengine-tasks-hpc Github repository
+            <https://github.com/uwefladrich/scriptengine-tasks-hpc>`_.
 
 
 The experiment schedule
